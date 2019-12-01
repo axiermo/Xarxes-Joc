@@ -97,7 +97,15 @@ void ModuleNetworkingServer::onPacketReceived(const InputMemoryStream &packet, c
 		packet >> message;
 
 		// Process the packet depending on its type
-		if (message == ClientMessage::Hello && Connected_users < MAX_CLIENTS)
+		bool nameavailable = false;
+		std::string playerName;
+		uint8 spaceshipType;
+		packet >> playerName;
+
+		
+
+
+		if (message == ClientMessage::Hello && Connected_users < MAX_CLIENTS && nameavailable)
 		{
 			bool newClient = false;
 
@@ -107,9 +115,7 @@ void ModuleNetworkingServer::onPacketReceived(const InputMemoryStream &packet, c
 
 				newClient = true;
 
-				std::string playerName;
-				uint8 spaceshipType;
-				packet >> playerName;
+				
 				packet >> spaceshipType;
 
 				proxy->address.sin_family = fromAddress.sin_family;
@@ -153,6 +159,12 @@ void ModuleNetworkingServer::onPacketReceived(const InputMemoryStream &packet, c
 				WLOG("Message received: UNWELCOMED hello - from player %s", proxy->name.c_str());
 			}
 		}
+		else if (!nameavailable) {
+			OutputMemoryStream Packet;
+			Packet << ServerMessage::NameDuplicate;
+			sendPacket(Packet, fromAddress);
+
+		}
 
 		else if (message == ClientMessage::Input)
 		{
@@ -178,6 +190,17 @@ void ModuleNetworkingServer::onPacketReceived(const InputMemoryStream &packet, c
 					}
 				}
 			}
+		}
+		else if (message == ClientMessage::WantToDisconnect) {
+			std::string playerName;
+			uint8 spaceshipType;
+			packet >> playerName;
+			for (int i = 0; i < MAX_CLIENTS; i++){
+				if (clientProxies[i].name == playerName) {
+					destroyClientProxy(&clientProxies[i]);
+				}
+			}
+			Connected_users -= 1;
 		}
 
 		if (proxy != nullptr)

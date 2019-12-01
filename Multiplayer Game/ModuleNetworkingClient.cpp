@@ -124,6 +124,11 @@ void ModuleNetworkingClient::onPacketReceived(const InputMemoryStream &packet, c
 			WLOG("ModuleNetworkingClient::onPacketReceived() - Unwelcome from server :-(");
 			disconnect();
 		}
+
+		else if (message == ServerMessage::NameDuplicate) {
+			WLOG("Name already in use try a new one");
+			disconnect();
+		}
 	}
 	else if (state == ClientState::Playing)
 	{
@@ -204,8 +209,13 @@ void ModuleNetworkingClient::onConnectionReset(const sockaddr_in & fromAddress)
 
 void ModuleNetworkingClient::onDisconnect()
 {
+	OutputMemoryStream stream;
 	state = ClientState::Stopped;
+	stream << ClientMessage::WantToDisconnect;
+	stream << playerName;
+	stream << spaceshipType;
 
+	sendPacket(stream, serverAddress);
 	// Get all network objects and clear the linking context
 	uint16 networkGameObjectsCount;
 	GameObject *networkGameObjects[MAX_NETWORK_OBJECTS] = {};
