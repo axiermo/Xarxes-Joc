@@ -105,7 +105,7 @@ void ModuleNetworkingServer::onPacketReceived(const InputMemoryStream &packet, c
 		
 
 
-		if (message == ClientMessage::Hello && Connected_users < MAX_CLIENTS && nameavailable)
+		if (message == ClientMessage::Hello && Connected_users < MAX_CLIENTS )
 		{
 			bool newClient = false;
 
@@ -175,20 +175,20 @@ void ModuleNetworkingServer::onPacketReceived(const InputMemoryStream &packet, c
 				// Read input data
 				while (packet.RemainingByteCount() > 0)
 				{
-					InputPacketData inputData;
-					packet >> inputData.sequenceNumber;
-					packet >> inputData.horizontalAxis;
-					packet >> inputData.verticalAxis;
-					packet >> inputData.buttonBits;
+					//InputPacketData inputData;
+					//packet >> inputData.sequenceNumber;
+					//packet >> inputData.horizontalAxis;
+					//packet >> inputData.verticalAxis;
+					//packet >> inputData.buttonBits;
 
-					if (inputData.sequenceNumber >= proxy->nextExpectedInputSequenceNumber)
-					{
-						proxy->gamepad.horizontalAxis = inputData.horizontalAxis;
-						proxy->gamepad.verticalAxis = inputData.verticalAxis;
-						unpackInputControllerButtons(inputData.buttonBits, proxy->gamepad);
-						proxy->gameObject->behaviour->onInput(proxy->gamepad);
-						proxy->nextExpectedInputSequenceNumber = inputData.sequenceNumber + 1;
-					}
+					//if (inputData.sequenceNumber >= proxy->nextExpectedInputSequenceNumber)
+					//{
+					//	proxy->gamepad.horizontalAxis = inputData.horizontalAxis;
+					//	proxy->gamepad.verticalAxis = inputData.verticalAxis;
+					//	unpackInputControllerButtons(inputData.buttonBits, proxy->gamepad);
+					//	proxy->gameObject->behaviour->onInput(proxy->gamepad);
+					//	proxy->nextExpectedInputSequenceNumber = inputData.sequenceNumber + 1;
+					//}
 				}
 			}
 		}
