@@ -153,13 +153,7 @@ void ModuleNetworkingServer::onPacketReceived(const InputMemoryStream &packet, c
 				WLOG("Message received: UNWELCOMED hello - from player %s", proxy->name.c_str());
 			}
 		}
-		else if (message == ClientMessage::Hello) {
-			OutputMemoryStream unwelcomePacket;
-			unwelcomePacket << ServerMessage::Unwelcome;
-			sendPacket(unwelcomePacket, fromAddress);
 
-			
-		}
 		else if (message == ClientMessage::Input)
 		{
 			// Process the input packet and update the corresponding game object
