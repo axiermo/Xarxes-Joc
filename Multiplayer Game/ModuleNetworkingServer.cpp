@@ -97,7 +97,7 @@ void ModuleNetworkingServer::onPacketReceived(const InputMemoryStream &packet, c
 		packet >> message;
 
 		// Process the packet depending on its type
-		if (message == ClientMessage::Hello)
+		if (message == ClientMessage::Hello && Connected_users < MAX_CLIENTS)
 		{
 			bool newClient = false;
 
@@ -139,7 +139,7 @@ void ModuleNetworkingServer::onPacketReceived(const InputMemoryStream &packet, c
 
 					// TODO(jesus): Notify the new client proxy's replication manager about the creation of this game object
 				}
-
+				Connected_users += 1;
 				LOG("Message received: hello - from player %s", playerName.c_str());
 			}
 
@@ -153,6 +153,7 @@ void ModuleNetworkingServer::onPacketReceived(const InputMemoryStream &packet, c
 				WLOG("Message received: UNWELCOMED hello - from player %s", proxy->name.c_str());
 			}
 		}
+
 		else if (message == ClientMessage::Input)
 		{
 			// Process the input packet and update the corresponding game object
@@ -235,6 +236,7 @@ void ModuleNetworkingServer::onConnectionReset(const sockaddr_in & fromAddress)
 void ModuleNetworkingServer::onDisconnect()
 {
 	// Destroy network game objects
+	
 	uint16 netGameObjectsCount;
 	GameObject *netGameObjects[MAX_NETWORK_OBJECTS];
 	App->modLinkingContext->getNetworkGameObjects(netGameObjects, &netGameObjectsCount);
@@ -291,6 +293,7 @@ ModuleNetworkingServer::ClientProxy * ModuleNetworkingServer::createClientProxy(
 
 void ModuleNetworkingServer::destroyClientProxy(ClientProxy * proxy)
 {
+	Connected_users -= 1;
 	*proxy = {};
 }
 
@@ -303,6 +306,7 @@ void ModuleNetworkingServer::destroyClientProxy(ClientProxy * proxy)
 GameObject * ModuleNetworkingServer::spawnPlayer(ClientProxy &clientProxy, uint8 spaceshipType)
 {
 	// Create a new game object with the player properties
+	
 	clientProxy.gameObject = Instantiate();
 	clientProxy.gameObject->size = { 100, 100 };
 	clientProxy.gameObject->angle = 45.0f;
@@ -382,6 +386,7 @@ void ModuleNetworkingServer::destroyNetworkObject(GameObject * gameObject)
 		if (clientProxies[i].connected)
 		{
 			// TODO(jesus): Notify this proxy's replication manager about the destruction of this game object
+			
 		}
 	}
 

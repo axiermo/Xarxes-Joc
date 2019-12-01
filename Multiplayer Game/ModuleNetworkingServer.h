@@ -77,7 +77,7 @@ public:
 	GameObject * spawnBullet(GameObject *parent);
 
 	// NOTE(jesus): Here go spawn methods for each type of network objects
-
+	int Connected_users = 0;
 
 
 private:
