@@ -156,6 +156,7 @@ bool ModuleNetworking::gui()
 		ImGui::Text(" - # Packet received: %u", receivedPacketsCount);
 
 		ImGui::Text(" - # Networked objects: %u", App->modLinkingContext->getNetworkGameObjectsCount());
+		ImGui::Text(" - # Active players: %u",App->modNetServer->Connected_users);
 
 		if (ImGui::Button("Disconnect")) {
 			disconnect();

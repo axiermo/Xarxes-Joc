@@ -159,9 +159,9 @@ void ModuleNetworkingServer::onPacketReceived(const InputMemoryStream &packet, c
 				WLOG("Message received: UNWELCOMED hello - from player %s", proxy->name.c_str());
 			}
 		}
-		else if (!nameavailable) {
+		else if (Connected_users== MAX_CLIENTS) {
 			OutputMemoryStream Packet;
-			Packet << ServerMessage::NameDuplicate;
+			Packet << ServerMessage::ServerFull;
 			sendPacket(Packet, fromAddress);
 
 		}
@@ -360,7 +360,7 @@ GameObject * ModuleNetworkingServer::spawnPlayer(ClientProxy &clientProxy, uint8
 	{
 		if (clientProxies[i].connected)
 		{
-			// TODO(jesus): Notify this proxy's replication manager about the creation of this game object
+			// TODO(jesus): Notify this proxy's replicatcion manager about the creation of this game object
 		}
 	}
 

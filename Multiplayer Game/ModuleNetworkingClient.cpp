@@ -125,8 +125,8 @@ void ModuleNetworkingClient::onPacketReceived(const InputMemoryStream &packet, c
 			disconnect();
 		}
 
-		else if (message == ServerMessage::NameDuplicate) {
-			WLOG("Name already in use try a new one");
+		else if (message == ServerMessage::ServerFull) {
+			WLOG("Server is full pepehands");
 			disconnect();
 		}
 	}

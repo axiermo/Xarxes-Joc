@@ -14,5 +14,5 @@ enum class ServerMessage
 	Unwelcome,
 	Replication,
 	Ping,
-	NameDuplicate
+	ServerFull
 };
