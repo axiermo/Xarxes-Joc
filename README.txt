@@ -14,4 +14,5 @@ List of known bugs:
 There are some unexpected behaviours when multiple players choose the same username
 
 
-Game is the one provided as we are more focused in delievering good code
+Game is the one provided as we are more focused in delievering good code except it is limited to two players
+so its easier to test.
